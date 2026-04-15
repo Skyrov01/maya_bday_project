@@ -1,0 +1,346 @@
+/* ── Reset / base ──────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #111318;
+  --surface:  #1e2029;
+  --border:   #2e3144;
+  --accent:   #7c6ef0;
+  --accent2:  #4fc8e8;
+  --danger:   #e05c5c;
+  --text:     #d4d6e8;
+  --text-dim: #6e7194;
+  --radius:   8px;
+  --led-size: 52px;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+}
+
+/* ── Top bar ───────────────────────────────────────────────────────────────── */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar__title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  flex: 1;
+  white-space: nowrap;
+}
+
+.topbar__conn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#ip-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 6px 10px;
+  font-size: 14px;
+  width: 140px;
+}
+
+#ip-input:focus { outline: none; border-color: var(--accent); }
+
+/* ── Status dot ────────────────────────────────────────────────────────────── */
+.status { font-size: 20px; line-height: 1; }
+.status--off     { color: var(--text-dim); }
+.status--pending { color: #e0a030; }
+.status--on      { color: #50d07a; }
+
+/* ── Banner ────────────────────────────────────────────────────────────────── */
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.banner--warn { background: #3a2a10; border-bottom: 1px solid #7a5010; }
+.banner__close {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 2px;
+  padding: 8px 16px 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab:hover    { color: var(--text); }
+.tab--active  { color: var(--accent); border-bottom-color: var(--accent); }
+
+.tab-panel { padding: 16px; }
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+button, .btn {
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  padding: 7px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity 0.15s;
+}
+button:hover, .btn:hover { opacity: 0.85; }
+button:disabled, .btn:disabled { opacity: 0.4; cursor: default; }
+
+.btn--sm     { padding: 4px 10px; font-size: 13px; }
+.btn--danger { background: var(--danger); }
+.btn--ghost  {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── Section title row ─────────────────────────────────────────────────────── */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+/* ── LED Grid ──────────────────────────────────────────────────────────────── */
+.led-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.led-dot {
+  width: var(--led-size);
+  height: var(--led-size);
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+  position: relative;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  user-select: none;
+}
+.led-dot:hover    { transform: scale(1.08); border-color: var(--accent); }
+.led-dot--selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+
+/* Hidden real color input overlaid on each dot */
+.led-dot input[type="color"] {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+/* ── Brightness row ────────────────────────────────────────────────────────── */
+.brightness-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+#brightness-slider {
+  flex: 1;
+  accent-color: var(--accent);
+}
+#brightness-value { min-width: 28px; text-align: right; color: var(--text-dim); }
+
+/* ── Effects panel ─────────────────────────────────────────────────────────── */
+.effects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.effect-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 8px;
+  border-radius: var(--radius);
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.effect-btn:hover   { border-color: var(--accent2); color: var(--accent2); }
+.effect-btn--active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── Pattern editor ────────────────────────────────────────────────────────── */
+.pattern-editor__toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.frame-list {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 14px;
+}
+
+.frame-card {
+  flex-shrink: 0;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px;
+  cursor: pointer;
+  background: var(--surface);
+  width: 84px;
+  transition: border-color 0.15s;
+}
+.frame-card--active { border-color: var(--accent); }
+.frame-card__dots {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 3px;
+  margin-bottom: 6px;
+}
+.frame-card__dot {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #000;
+  border: 1px solid var(--border);
+}
+.frame-card__dur {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+}
+.frame-card__del {
+  float: right;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  padding: 0;
+  cursor: pointer;
+  line-height: 1;
+}
+.frame-card__del:hover { color: var(--danger); }
+
+.frame-editor {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.frame-editor__title {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.frame-editor__led-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.frame-editor__duration {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+.frame-editor__duration input[type="number"] {
+  width: 80px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 5px 8px;
+  font-size: 14px;
+}
+
+/* ── Storage panel ─────────────────────────────────────────────────────────── */
+.storage-panel__save {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.storage-panel__save input[type="text"] {
+  flex: 1;
+  min-width: 120px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 7px 10px;
+  font-size: 14px;
+}
+.storage-panel__save input:focus { outline: none; border-color: var(--accent); }
+
+.pattern-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.pattern-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+}
+.pattern-item__name { flex: 1; font-size: 14px; }
+.pattern-item__play { background: var(--accent2); }
+
+/* ── Divider ───────────────────────────────────────────────────────────────── */
+.divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+/* ── Mobile tweaks ─────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  :root { --led-size: 44px; }
+  .topbar__title { display: none; }
+  #ip-input { width: 110px; }
+}

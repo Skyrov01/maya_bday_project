@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wemos LED Controller</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+
+  <!-- ── Connection bar ─────────────────────────────────────────── -->
+  <header class="topbar">
+    <span class="topbar__title">LED Controller</span>
+    <div class="topbar__conn">
+      <input id="ip-input" type="text" placeholder="192.168.x.x"
+             autocomplete="off" autocorrect="off" spellcheck="false" />
+      <button id="btn-connect">Connect</button>
+      <span id="conn-status" class="status status--off" title="Disconnected">●</span>
+    </div>
+  </header>
+
+  <!-- ── Mixed-content warning (hidden by default) ──────────────── -->
+  <div id="mixed-content-banner" class="banner banner--warn" hidden>
+    <strong>Allow insecure content</strong> — this app is on HTTPS but your
+    Wemos uses plain HTTP. In Chrome: click the lock icon → Site settings →
+    Insecure content → Allow. In Firefox: click the shield icon → Disable
+    protection. Then reload.
+    <button class="banner__close" id="dismiss-banner">✕</button>
+  </div>
+
+  <!-- ── Tabs ───────────────────────────────────────────────────── -->
+  <nav class="tabs" role="tablist">
+    <button class="tab tab--active" data-tab="control"  role="tab">Control</button>
+    <button class="tab"             data-tab="effects"  role="tab">Effects</button>
+    <button class="tab"             data-tab="patterns" role="tab">Patterns</button>
+  </nav>
+
+  <!-- ── Control tab ────────────────────────────────────────────── -->
+  <section id="tab-control" class="tab-panel">
+    <div class="section-title">LEDs
+      <button id="btn-all-off" class="btn btn--sm btn--danger">All Off</button>
+      <button id="btn-fill"    class="btn btn--sm">Fill All</button>
+      <input  id="fill-color"  type="color" value="#ff0000" title="Fill colour" />
+    </div>
+    <div id="led-grid" class="led-grid">
+      <!-- Populated by led-grid.js -->
+    </div>
+    <div class="brightness-row">
+      <label for="brightness-slider">Brightness</label>
+      <input id="brightness-slider" type="range" min="0" max="255" value="32" />
+      <span  id="brightness-value">32</span>
+    </div>
+  </section>
+
+  <!-- ── Effects tab ────────────────────────────────────────────── -->
+  <section id="tab-effects" class="tab-panel" hidden>
+    <div id="effects-panel">
+      <!-- Populated by effects-panel.js -->
+    </div>
+  </section>
+
+  <!-- ── Patterns tab ───────────────────────────────────────────── -->
+  <section id="tab-patterns" class="tab-panel" hidden>
+    <div id="pattern-editor">
+      <!-- Populated by pattern-editor.js -->
+    </div>
+    <hr class="divider" />
+    <div id="storage-panel">
+      <!-- Populated by storage-panel.js -->
+    </div>
+  </section>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
