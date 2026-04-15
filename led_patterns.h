@@ -4,13 +4,18 @@
 #include "led_controller.h"
 
 enum class Effect : uint8_t {
-    NONE       = 0,
-    CHASE      = 1,
-    RAINBOW    = 2,
-    SPARKLE    = 3,
-    COMET      = 4,
-    COLOR_WIPE = 5,
-    PING_PONG  = 6
+    NONE        = 0,
+    CHASE       = 1,
+    RAINBOW     = 2,
+    SPARKLE     = 3,
+    COMET       = 4,
+    COLOR_WIPE  = 5,
+    PING_PONG   = 6,
+    PULSE       = 7,
+    WAVE        = 8,
+    STROBE      = 9,
+    THEATER     = 10,
+    KALEIDOSCOPE= 11
 };
 
 // Convert between Effect enum and its JSON string name.
@@ -47,6 +52,11 @@ private:
     void tick_comet();
     void tick_color_wipe();
     void tick_ping_pong();
+    void tick_pulse();
+    void tick_wave();
+    void tick_strobe();
+    void tick_theater();
+    void tick_kaleidoscope();
 };
 
 extern LedPatterns patterns;

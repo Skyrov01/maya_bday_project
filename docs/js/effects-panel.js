@@ -9,6 +9,11 @@ const EFFECTS = [
   { id: 'comet',     label: '☄️  Comet'    },
   { id: 'colorwipe', label: '🎨 Color Wipe' },
   { id: 'pingpong',  label: '🏓 Ping Pong' },
+  { id: 'pulse',     label: '💗 Pulse'    },
+  { id: 'wave',      label: '🌊 Wave'     },
+  { id: 'strobe',    label: '⚡ Strobe'   },
+  { id: 'theater',   label: '🎭 Theater'  },
+  { id: 'kaleidoscope', label: '🎪 Kaleidoscope' },
 ];
 
 export class EffectsPanel {
