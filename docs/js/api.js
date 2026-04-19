@@ -77,6 +77,9 @@ export class Api {
   /** Returns [{id, name}] */
   listPatterns() { return this._get('/api/patterns'); }
 
+  /** Returns { id, name, frames } for a single pattern. */
+  getPattern(id) { return this._get(`/api/patterns/get?id=${encodeURIComponent(id)}`); }
+
   /**
    * @param {string} name
    * @param {Array<{leds:Array<{r,g,b}>, duration_ms:number}>} frames

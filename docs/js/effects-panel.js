@@ -3,17 +3,18 @@
 import { api } from './api.js';
 
 const EFFECTS = [
-  { id: 'chase',     label: '🔵 Chase'     },
-  { id: 'rainbow',   label: '🌈 Rainbow'   },
-  { id: 'sparkle',   label: '✨ Sparkle'   },
-  { id: 'comet',     label: '☄️  Comet'    },
-  { id: 'colorwipe', label: '🎨 Color Wipe' },
-  { id: 'pingpong',  label: '🏓 Ping Pong' },
-  { id: 'pulse',     label: '💗 Pulse'    },
-  { id: 'wave',      label: '🌊 Wave'     },
-  { id: 'strobe',    label: '⚡ Strobe'   },
-  { id: 'theater',   label: '🎭 Theater'  },
-  { id: 'kaleidoscope', label: '🎪 Kaleidoscope' },
+  { id: 'chase',        label: '🌠 Shooting Star'  },
+  { id: 'rainbow',      label: '🌌 Aurora'          },
+  { id: 'sparkle',      label: '✨ Stardust'        },
+  { id: 'comet',        label: '☄️  Comet Tail'     },
+  { id: 'colorwipe',    label: '🎨 Twilight Sweep'  },
+  { id: 'pingpong',     label: '🪲 Firefly'         },
+  { id: 'pulse',        label: '💫 Heartbeat'       },
+  { id: 'wave',         label: '🌙 Moonwave'        },
+  { id: 'strobe',       label: '⚡ Lightning'       },
+  { id: 'theater',      label: '🎭 Milky Way'       },
+  { id: 'kaleidoscope',  label: '🌀 Nebula'          },
+  { id: 'meteorshower',  label: '🌟 Meteor Shower'   },
 ];
 
 export class EffectsPanel {
@@ -42,10 +43,10 @@ export class EffectsPanel {
     }
     this._container.appendChild(grid);
 
-    // Stop button
+    // Hush (stop) button
     const stop = document.createElement('button');
     stop.className   = 'btn btn--ghost';
-    stop.textContent = '⏹ Stop';
+    stop.textContent = '🌑 Hush';
     stop.addEventListener('click', () => this._activate('stop'));
     this._container.appendChild(stop);
   }

@@ -60,6 +60,29 @@ export class StoragePanel {
     nameSpan.className   = 'pattern-item__name';
     nameSpan.textContent = p.name;
 
+    const editBtn = document.createElement('button');
+    editBtn.className   = 'btn btn--sm pattern-item__edit';
+    editBtn.textContent = '✏ Edit';
+    editBtn.title       = 'Load into editor';
+    editBtn.addEventListener('click', async () => {
+      editBtn.disabled = true;
+      editBtn.textContent = '…';
+      try {
+        const data = await api.getPattern(p.id);
+        this._patternEditor.loadFrames(data.frames);
+        // Pre-fill the name input so re-saving is easy.
+        const nameInput = this._container.querySelector('#sp-name');
+        if (nameInput) nameInput.value = data.name;
+        // Scroll the editor into view.
+        this._patternEditor._container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (e) {
+        alert('Could not load pattern: ' + e.message);
+      } finally {
+        editBtn.disabled = false;
+        editBtn.textContent = '✏ Edit';
+      }
+    });
+
     const playBtn = document.createElement('button');
     playBtn.className   = 'btn btn--sm pattern-item__play';
     playBtn.textContent = '▶ Play';
@@ -83,6 +106,7 @@ export class StoragePanel {
     });
 
     li.appendChild(nameSpan);
+    li.appendChild(editBtn);
     li.appendChild(playBtn);
     li.appendChild(delBtn);
     return li;

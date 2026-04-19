@@ -15,7 +15,8 @@ enum class Effect : uint8_t {
     WAVE        = 8,
     STROBE      = 9,
     THEATER     = 10,
-    KALEIDOSCOPE= 11
+    KALEIDOSCOPE   = 11,
+    METEOR_SHOWER  = 12
 };
 
 // Convert between Effect enum and its JSON string name.
@@ -57,6 +58,7 @@ private:
     void tick_strobe();
     void tick_theater();
     void tick_kaleidoscope();
+    void tick_meteor_shower();
 };
 
 extern LedPatterns patterns;

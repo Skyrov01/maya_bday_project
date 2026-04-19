@@ -38,6 +38,8 @@ export class LedGrid {
       let debounceId = null;
       input.addEventListener('input', () => {
         dot.style.backgroundColor = input.value;
+        const isOff = input.value === '#000000';
+        dot.style.setProperty('--glow', isOff ? 'transparent' : input.value + '99');
         clearTimeout(debounceId);
         debounceId = setTimeout(() => {
           const [r, g, b] = hexToRgb(input.value);
@@ -56,8 +58,10 @@ export class LedGrid {
   setColor(index, r, g, b) {
     if (index < 0 || index >= this._count) return;
     const hex = rgbToHex(r, g, b);
-    this._inputs[index].value             = hex;
+    this._inputs[index].value               = hex;
     this._dots[index].style.backgroundColor = hex;
+    const isOff = r === 0 && g === 0 && b === 0;
+    this._dots[index].style.setProperty('--glow', isOff ? 'transparent' : hex + '99');
   }
 
   /** Bulk update from API response array. */

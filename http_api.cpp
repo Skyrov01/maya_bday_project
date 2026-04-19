@@ -169,6 +169,48 @@ static void handlePostEffect() {
     sendOk();
 }
 
+// ─── GET /api/patterns/get?id=X ─────────────────────────────────────────────
+// Returns { id, name, frames: [{leds:[{r,g,b}], duration_ms}] }
+
+static void handleGetPattern() {
+    String id = server.arg("id");
+    if (id.length() == 0) { sendError(400, "id required"); return; }
+
+    PatternPlayer tmp;
+    if (!storage.loadPattern(id.c_str(), tmp)) {
+        sendError(404, "Pattern not found");
+        return;
+    }
+
+    // Resolve the pattern name from the listing.
+    PatternInfo infos[STORAGE_MAX_PATTERNS];
+    int total = storage.listPatterns(infos, STORAGE_MAX_PATTERNS);
+    const char* patName = id.c_str();
+    for (int i = 0; i < total; i++) {
+        if (strcmp(infos[i].id, id.c_str()) == 0) { patName = infos[i].name; break; }
+    }
+
+    DynamicJsonDocument doc(8192);
+    doc["id"]   = id;
+    doc["name"] = patName;
+    JsonArray jframes = doc.createNestedArray("frames");
+    for (uint8_t fi = 0; fi < tmp.frameCount(); fi++) {
+        const PatternFrame& pf = tmp.frame(fi);
+        JsonObject jf = jframes.createNestedObject();
+        jf["duration_ms"] = pf.duration_ms;
+        JsonArray jleds = jf.createNestedArray("leds");
+        for (uint8_t li = 0; li < LED_COUNT; li++) {
+            JsonObject jled = jleds.createNestedObject();
+            jled["r"] = pf.r[li];
+            jled["g"] = pf.g[li];
+            jled["b"] = pf.b[li];
+        }
+    }
+    String out;
+    serializeJson(doc, out);
+    sendJson(200, out);
+}
+
 // ─── GET /api/patterns ───────────────────────────────────────────────────────
 
 static void handleGetPatterns() {
@@ -291,6 +333,7 @@ void http_api_init() {
     server.on("/api/brightness",      HTTP_OPTIONS, handleOptions);
     server.on("/api/effect",          HTTP_OPTIONS, handleOptions);
     server.on("/api/patterns",        HTTP_OPTIONS, handleOptions);
+    server.on("/api/patterns/get",    HTTP_OPTIONS, handleOptions);
     server.on("/api/patterns/save",   HTTP_OPTIONS, handleOptions);
     server.on("/api/patterns/play",   HTTP_OPTIONS, handleOptions);
     server.on("/api/patterns/delete", HTTP_OPTIONS, handleOptions);
@@ -304,6 +347,7 @@ void http_api_init() {
     server.on("/api/brightness",      HTTP_POST, handlePostBrightness);
     server.on("/api/effect",          HTTP_POST, handlePostEffect);
     server.on("/api/patterns",        HTTP_GET,  handleGetPatterns);
+    server.on("/api/patterns/get",    HTTP_GET,  handleGetPattern);
     server.on("/api/patterns/save",   HTTP_POST, handleSavePattern);
     server.on("/api/patterns/play",   HTTP_POST, handlePlayPattern);
     server.on("/api/patterns/delete", HTTP_POST, handleDeletePattern);

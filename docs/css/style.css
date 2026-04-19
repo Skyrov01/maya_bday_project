@@ -2,14 +2,14 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:       #111318;
-  --surface:  #1e2029;
-  --border:   #2e3144;
-  --accent:   #7c6ef0;
-  --accent2:  #4fc8e8;
+  --bg:       #0a0d18;
+  --surface:  #131829;
+  --border:   #252d4a;
+  --accent:   #c8a96e;
+  --accent2:  #8fa8d8;
   --danger:   #e05c5c;
-  --text:     #d4d6e8;
-  --text-dim: #6e7194;
+  --text:     #e8e6dc;
+  --text-dim: #7a8099;
   --radius:   8px;
   --led-size: 52px;
 }
@@ -40,7 +40,22 @@ html, body {
   font-size: 1.05rem;
   flex: 1;
   white-space: nowrap;
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: 0.04em;
 }
+
+.topbar__back {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 18px;
+  padding: 4px 6px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+.topbar__back:hover { opacity: 1; }
 
 .topbar__conn {
   display: flex;
@@ -108,7 +123,15 @@ html, body {
 .tab:hover    { color: var(--text); }
 .tab--active  { color: var(--accent); border-bottom-color: var(--accent); }
 
-.tab-panel { padding: 16px; }
+.tab-panel {
+  padding: 28px 16px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+#tab-patterns {
+  max-width: 800px;
+}
 
 /* ── Buttons ───────────────────────────────────────────────────────────────── */
 button, .btn {
@@ -138,6 +161,8 @@ button:disabled, .btn:disabled { opacity: 0.4; cursor: default; }
 .section-title {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   gap: 8px;
   font-weight: 600;
   margin-bottom: 14px;
@@ -145,19 +170,17 @@ button:disabled, .btn:disabled { opacity: 0.4; cursor: default; }
 
 /* ── LED Grid ──────────────────────────────────────────────────────────────── */
 .led-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 10px;
   margin-bottom: 20px;
 }
 
 .led-dot {
-  width: var(--led-size);
-  height: var(--led-size);
+  aspect-ratio: 1;
   border-radius: 50%;
   border: 2px solid var(--border);
   cursor: pointer;
-  transition: transform 0.1s, border-color 0.1s;
   position: relative;
   background: #000;
   display: flex;
@@ -185,8 +208,12 @@ button:disabled, .btn:disabled { opacity: 0.4; cursor: default; }
 .brightness-row {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   margin-top: 4px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 #brightness-slider {
   flex: 1;
@@ -281,11 +308,22 @@ button:disabled, .btn:disabled { opacity: 0.4; cursor: default; }
   font-weight: 600;
   margin-bottom: 12px;
 }
+/* LED dots are sized by the parent grid — override width only inside .led-grid */
+.led-grid .led-dot {
+  width: 100%;
+}
+
+/* In the frame editor the dots sit in a flex container — use a fixed small size */
 .frame-editor__led-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 14px;
+}
+
+.frame-editor__led-grid .led-dot {
+  width: 44px;
+  height: 44px;
 }
 .frame-editor__duration {
   display: flex;
@@ -333,6 +371,8 @@ button:disabled, .btn:disabled { opacity: 0.4; cursor: default; }
   padding: 8px 12px;
 }
 .pattern-item__name { flex: 1; font-size: 14px; }
+.pattern-item__edit { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+.pattern-item__edit:hover { background: rgba(200,169,110,0.12); }
 .pattern-item__play { background: var(--accent2); }
 
 /* ── Divider ───────────────────────────────────────────────────────────────── */
@@ -340,7 +380,153 @@ button:disabled, .btn:disabled { opacity: 0.4; cursor: default; }
 
 /* ── Mobile tweaks ─────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
-  :root { --led-size: 44px; }
   .topbar__title { display: none; }
   #ip-input { width: 110px; }
+}
+
+/* ── Star particles ────────────────────────────────────────────────────────── */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.85); }
+  50%       { opacity: 1;    transform: scale(1.1);  }
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #e8e6dc;
+  animation: twinkle linear infinite;
+  pointer-events: none;
+}
+
+.star--sparkle {
+  border-radius: 0;
+  background: #fff8e0;
+  clip-path: polygon(50% 0%, 54% 46%, 100% 50%, 54% 54%, 50% 100%, 46% 54%, 0% 50%, 46% 46%);
+}
+
+/* ── Controller starfield ──────────────────────────────────────────────────── */
+.controller-stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.controller-stars .star { opacity: 0.35; }
+
+/* Ensure all app content sits above the star layer */
+.topbar, nav.tabs, .tab-panel, #mixed-content-banner {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Landing page ──────────────────────────────────────────────────────────── */
+#landing {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #06081a 0%, #0e1428 50%, #12102a 100%);
+  overflow: hidden;
+  transition: opacity 1.2s ease;
+}
+
+#landing.landing--fade {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.landing__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+#landing .stars-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.landing__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  text-align: center;
+  padding: 24px;
+}
+
+.landing__name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3.5rem, 14vw, 8rem);
+  font-weight: 600;
+  color: #f5eedb;
+  letter-spacing: 0.06em;
+  text-shadow:
+    0 0 40px rgba(200, 169, 110, 0.6),
+    0 0 80px rgba(200, 169, 110, 0.25);
+  line-height: 1.1;
+}
+
+.landing__message {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1rem, 3vw, 1.25rem);
+  color: #c8bfa8;
+  max-width: 420px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+}
+
+.landing__open-btn {
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid rgba(200, 169, 110, 0.55);
+  color: #e8d9b0;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  padding: 12px 32px;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, opacity 0.3s;
+  text-transform: uppercase;
+}
+
+.landing__open-btn:hover {
+  background: rgba(200, 169, 110, 0.12);
+  border-color: rgba(200, 169, 110, 0.9);
+  box-shadow: 0 0 24px rgba(200, 169, 110, 0.25);
+}
+
+/* ── LED dot glow ──────────────────────────────────────────────────────────── */
+.led-dot {
+  --glow: transparent;
+  box-shadow: 0 0 12px 3px var(--glow);
+  transition: transform 0.1s, border-color 0.1s, box-shadow 0.3s;
+}
+
+@keyframes star-pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.08); }
+}
+
+.led-dot--selected {
+  animation: star-pulse 1.8s ease-in-out infinite;
+}
+
+/* ── Mobile landing tweaks ─────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .landing__open-btn { font-size: 0.9rem; padding: 11px 26px; letter-spacing: 0.12em; }
 }
