@@ -40,14 +40,17 @@ if (landing) {
     landing.style.display = 'none';
   }
 
-  document.getElementById('btn-open').addEventListener('click', () => {
-    if (bgAudio) bgAudio.play().catch(() => {});
-    landing.classList.add('landing--fade');
-    landing.addEventListener('transitionend', () => {
-      landing.style.display = 'none';
-      sessionStorage.setItem('enteredApp', 'true');
-    }, { once: true });
-  });
+  const btnOpen = document.getElementById('btn-open');
+  if (btnOpen) {
+    btnOpen.addEventListener('click', () => {
+      if (bgAudio) bgAudio.play().catch(() => {});
+      landing.classList.add('landing--fade');
+      landing.addEventListener('transitionend', () => {
+        landing.style.display = 'none';
+        sessionStorage.setItem('enteredApp', 'true');
+      }, { once: true });
+    });
+  }
 }
 
 const btnBack = document.getElementById('btn-back');
